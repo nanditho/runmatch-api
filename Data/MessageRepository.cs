@@ -50,7 +50,7 @@ namespace API.Data
 
             var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
 
-            return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageSize, messageParams.PageNumber);
+            return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
 
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
