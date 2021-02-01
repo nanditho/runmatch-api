@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text.Json;
 using API.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,16 @@ namespace API.Extenstions
 
             response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader, options));
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+        }
+
+        public static string GetUserId(this HttpContext httpContext)
+        {
+            if (httpContext.User == null)
+            {
+                return string.Empty;
+            }
+
+            return httpContext.User.Claims.Single(x => x.Type == "id").Value;
         }
     }
 }

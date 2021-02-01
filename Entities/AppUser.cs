@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using API.Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
@@ -17,6 +18,7 @@ namespace API.Entities
         public int Mileage { get; set; }
         public string RunTime { get; set; }
         public ICollection<Photo> Photos { get; set; }
+        public ICollection<Club> Clubs { get; set; }
         public ICollection<UserInvite> InvitedByUsers { get; set; }
         public ICollection<UserInvite> InvitedUsers { get; set; }
         public ICollection<Message> MessagesSent { get; set; }

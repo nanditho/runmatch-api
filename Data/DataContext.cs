@@ -1,3 +1,4 @@
+using API.Domain;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,9 @@ namespace API.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserInvite> Invites { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Connection> Connections { get; set; }
+        public DbSet<Club> Clubs { get; set; }
 
         // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         // {

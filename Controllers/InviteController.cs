@@ -13,26 +13,25 @@ namespace API.Controllers
     [Authorize]
     public class InviteController : BaseApiController
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IInviteRepository _inviteRepository;
-        public InviteController(IUserRepository userRepository, IInviteRepository inviteRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public InviteController(IUnitOfWork unitOfWork)
         {
-            _inviteRepository = inviteRepository;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost("{username}")]
         public async Task<ActionResult> AddLike(string username)
         {
             var sourceUserId = User.GetUserId();
-            var invitedUser = await _userRepository.GetUserByUsername(username);
-            var sourceUser = await _inviteRepository.GetUserWithInvites(sourceUserId);
+            var invitedUser = await _unitOfWork.UserRepository.GetUserByUsername(username);
+            var sourceUser = await _unitOfWork.InviteRepository.GetUserWithInvites(sourceUserId);
 
             if (invitedUser == null) return NotFound();
 
             if (sourceUser.UserName == username) return BadRequest("You cannot invite yourself");
 
-            var userInvite = await _inviteRepository.GetUserInvite(sourceUserId, invitedUser.Id);
+            var userInvite = await _unitOfWork.InviteRepository.GetUserInvite(sourceUserId, invitedUser.Id);
  
             if (userInvite != null) return BadRequest("You already invited this user");
 
@@ -44,7 +43,7 @@ namespace API.Controllers
 
             sourceUser.InvitedUsers.Add(userInvite);
 
-            if (await _userRepository.SaveAllAsync()) return Ok();
+            if (await _unitOfWork.Complete()) return Ok();
 
             return BadRequest("Failed to invite user");
             
@@ -54,7 +53,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<InviteDto>>> GetUserInvites([FromQuery]InviteParams inviteParams)
         {
             inviteParams.UserId = User.GetUserId();
-            var users = await _inviteRepository.GetUserInvites(inviteParams);
+            var users = await _unitOfWork.InviteRepository.GetUserInvites(inviteParams);
 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
