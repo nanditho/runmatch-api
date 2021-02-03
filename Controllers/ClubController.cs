@@ -38,11 +38,15 @@ namespace API.Controllers
         }
 
         [HttpPost("api/clubs")]
-        public async Task<IActionResult> Create(CreateClubDto clubRequest)
+        public async Task<IActionResult> Create([FromBody] CreateClubDto clubRequest)
         {
             var club = new Club 
             { 
-                Name = clubRequest.Name
+                Name = clubRequest.Name,
+                City = clubRequest.City,
+                State = clubRequest.State,
+                Intro = clubRequest.Intro
+
             };
 
             await _clubRepository.CreateClubAsync(club);
