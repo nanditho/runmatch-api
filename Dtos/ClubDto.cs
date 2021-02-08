@@ -1,10 +1,14 @@
 using System;
+using API.Domain;
 
 namespace API.Dtos.ClubDto
 {
     public class ClubDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Intro { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public CreateEventDto Events { get; set; }
     }
 }

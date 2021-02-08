@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Migrations
 {
-    public partial class INit : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -185,16 +185,15 @@ namespace API.Migrations
                     Intro = table.Column<string>(nullable: true),
                     City = table.Column<string>(nullable: true),
                     State = table.Column<string>(nullable: true),
-                    Events = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
-                    AppUserId = table.Column<int>(nullable: false)
+                    AppUserID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clubs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clubs_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
+                        name: "FK_Clubs_AspNetUsers_AppUserID",
+                        column: x => x.AppUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -298,6 +297,28 @@ namespace API.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(nullable: true),
+                    Location = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    ClubId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Events_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -336,14 +357,19 @@ namespace API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clubs_AppUserId",
+                name: "IX_Clubs_AppUserID",
                 table: "Clubs",
-                column: "AppUserId");
+                column: "AppUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Connections_GroupName",
                 table: "Connections",
                 column: "GroupName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_ClubId",
+                table: "Events",
+                column: "ClubId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invites_InvitedUserId",
@@ -384,10 +410,10 @@ namespace API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Clubs");
+                name: "Connections");
 
             migrationBuilder.DropTable(
-                name: "Connections");
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Invites");
@@ -403,6 +429,9 @@ namespace API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Clubs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using API.Domain;
 using API.Entities;
 
 namespace API.Dtos
@@ -11,7 +12,6 @@ namespace API.Dtos
         public string Intro { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Events { get; set; }
-        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public CreateEventDto Events { get; set; }
     }
 }

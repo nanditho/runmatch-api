@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using API.Entities;
@@ -12,9 +13,9 @@ namespace API.Domain
         public string Intro { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Events { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;        
-        public int AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public int AppUserID {get; set;}
+        public AppUser AppUser {get; set;}
+        public ICollection<Event> Events {get; set;}
     }
 }

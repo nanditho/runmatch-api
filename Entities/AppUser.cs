@@ -17,8 +17,8 @@ namespace API.Entities
         public int Pace { get; set; }
         public int Mileage { get; set; }
         public string RunTime { get; set; }
+        public ICollection<Club> Club { get; set; }
         public ICollection<Photo> Photos { get; set; }
-        public ICollection<Club> Clubs { get; set; }
         public ICollection<UserInvite> InvitedByUsers { get; set; }
         public ICollection<UserInvite> InvitedUsers { get; set; }
         public ICollection<Message> MessagesSent { get; set; }

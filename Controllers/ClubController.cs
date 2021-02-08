@@ -7,6 +7,7 @@ using API.Dtos;
 using API.Extenstions;
 using API.Interfaces;
 using API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,10 +15,20 @@ namespace API.Controllers
     public class ClubController : Controller
     {
         private readonly IClubRepository _clubRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ClubController(IClubRepository clubRepository)
+        public ClubController(
+            IClubRepository clubRepository, 
+            IEventRepository eventRepository, 
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
             _clubRepository = clubRepository;
+            _eventRepository = eventRepository;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("api/clubs")]
@@ -40,15 +51,35 @@ namespace API.Controllers
         [HttpPost("api/clubs")]
         public async Task<IActionResult> Create([FromBody] CreateClubDto clubRequest)
         {
+            if (clubRequest == null)
+            {
+                return BadRequest();
+            }
+
+            var username = User.GetUsername();
+            var user = await _unitOfWork.UserRepository.GetUserByUsername(username);
+
+            
             var club = new Club 
             { 
                 Name = clubRequest.Name,
                 City = clubRequest.City,
                 State = clubRequest.State,
-                Intro = clubRequest.Intro
-
+                Intro = clubRequest.Intro,
+                AppUser = user,
+                AppUserID = user.Id,
+                Events = 
+                new List<Event>
+            {
+                new Event {
+                    Title = clubRequest.Events.Title,
+                    Location = clubRequest.Events.Location,
+                    Date = clubRequest.Events.Date, 
+                    }
+                }
             };
 
+            
             await _clubRepository.CreateClubAsync(club);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
